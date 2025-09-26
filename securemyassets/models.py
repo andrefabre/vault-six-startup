@@ -24,16 +24,16 @@ def validate_pdf_file(value):
 
 class Asset(models.Model):
     CATEGORY_CHOICES = [
-        ('CRYPTO', 'Cryptocurrency'),
-        ('DIGITAL', 'Digital Assets'),
-        ('DOC', 'Important Documents'),
-        ('PASS', 'Passwords'),
-        ('SOCIAL', 'Social Media'),
-        ('FINANCE', 'Financial Accounts'),
-        ('OTHER', 'Other'),
+        ('IDENTITY', 'Identity'),
+        ('FINANCIAL', 'Financial'),
+        ('DEVICES', 'Digital Devices'),
+        ('CONTENT', 'Digital Content, Services and Storage'),
+        ('LEGAL', 'Legal'),
+        ('HEALTH', 'Health and Wellness'),
+        ('BUSINESS', 'Business'),
     ]
     
-    category = models.CharField(max_length=10, choices=CATEGORY_CHOICES)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     name = models.CharField(max_length=100)
     note = models.TextField(blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)

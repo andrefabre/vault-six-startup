@@ -1,0 +1,51 @@
+name: Django CI/CD
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.11]
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install flake8 pytest black bandit safety
+    
+    - name: Run Linting
+      run: |
+        # Stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Run black in check mode
+        black --check .
+    
+    - name: Run Tests
+      run: |
+        python manage.py test
+    
+    - name: Security Check
+      run: |
+        # Check for known security vulnerabilities in dependencies
+        safety check
+        # Run bandit for security issues in code
+        bandit -r . -x "./venv/*,**/tests/*"
+    
+    - name: Check Migrations
+      run: |
+        python manage.py makemigrations --check --dry-run
+        python manage.py migrate --plan
