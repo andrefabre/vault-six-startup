@@ -37,8 +37,11 @@ def dashboard(request):
     else:
         form = AssetForm()
     
-    # Get vault access status
-    vault_access = VaultAccess.objects.get(user=request.user)
+    # Get or create vault access status
+    vault_access, created = VaultAccess.objects.get_or_create(
+        user=request.user,
+        defaults={'granted': False}
+    )
     
     context = {
         'assets': assets,
