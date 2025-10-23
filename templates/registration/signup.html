@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Sign Up - Digital Asset Security{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body">
+                <h2 class="text-center mb-4">Create an Account</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                </form>
+                <hr>
+                <div class="text-center">
+                    <a href="{% url 'login' %}">Already have an account? Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

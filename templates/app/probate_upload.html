@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Upload Probate Grant - Digital Asset Security{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body">
+                <h2 class="text-center mb-4">Upload Probate Grant</h2>
+                
+                {% if existing_grant %}
+                    <div class="alert alert-info">
+                        <h5>Current Probate Grant Status: {{ existing_grant.get_status_display }}</h5>
+                        {% if existing_grant.status == 'REJECTED' %}
+                            <p>Your previous submission was rejected. You can submit a new document below.</p>
+                            {% if existing_grant.review_notes %}
+                                <p><strong>Rejection reason:</strong> {{ existing_grant.review_notes }}</p>
+                            {% endif %}
+                        {% elif existing_grant.status == 'UPLOADED' %}
+                            <p>Your document is pending review. We'll notify you once it's been processed.</p>
+                        {% elif existing_grant.status == 'APPROVED' %}
+                            <p>Your probate grant has been approved and vault access has been granted.</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                {% if not existing_grant or existing_grant.status == 'REJECTED' %}
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="alert alert-info">
+                            <h6>Important Notes:</h6>
+                            <ul class="mb-0">
+                                <li>Only PDF files are accepted</li>
+                                <li>Maximum file size is 2MB</li>
+                                <li>Document must be clearly legible</li>
+                                <li>All sensitive information should be redacted</li>
+                            </ul>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Upload Document</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

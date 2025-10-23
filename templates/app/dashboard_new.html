@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Dashboard - Digital Asset Security{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Vault Access Status -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow {% if vault_access.granted %}bg-success{% else %}bg-warning{% endif %} text-white">
+            <div class="card-body">
+                <h5 class="card-title">Vault Access Status</h5>
+                {% if vault_access.granted %}
+                    <p class="card-text">Your vault access was granted on {{ vault_access.granted_at|date:"F j, Y" }}</p>
+                {% else %}
+                    <p class="card-text">Your vault access is pending. Please visit the Requests page to upload your probate grant document.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Probate Grant Status -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow">
+            <div class="card-body">
+                <h5 class="card-title">Probate Grant Status</h5>
+                {% if probate_grant %}
+                    <p class="mb-2">Status: <span class="badge badge-{% if probate_grant.status == 'APPROVED' %}success{% elif probate_grant.status == 'REJECTED' %}danger{% else %}warning{% endif %}">
+                        {{ probate_grant.get_status_display }}
+                    </span></p>
+                    <p class="mb-2">Submitted: {{ probate_grant.created_at|date:"F j, Y" }}</p>
+                    {% if probate_grant.status == 'REJECTED' and probate_grant.review_notes %}
+                        <p class="text-danger">{{ probate_grant.review_notes }}</p>
+                        <a href="{% url 'requests' %}" class="btn btn-primary btn-sm">Upload New Document</a>
+                    {% endif %}
+                {% else %}
+                    <p class="mb-2">No probate grant uploaded yet.</p>
+                    <a href="{% url 'requests' %}" class="btn btn-primary">Upload Probate Grant</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Asset Summary -->
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-body">
+                <h4 class="card-title">My Digital Assets</h4>
+                {% if assets %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Name</th>
+                                    <th>Note</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for asset in assets %}
+                                    <tr>
+                                        <td>{{ asset.get_category_display }}</td>
+                                        <td>{{ asset.name }}</td>
+                                        <td>{{ asset.note|truncatewords:10 }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="text-right">
+                            <a href="{% url 'assets' %}" class="btn btn-primary">Manage Assets</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-muted">No assets added yet.</p>
+                    <a href="{% url 'assets' %}" class="btn btn-primary">Add Your First Asset</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
