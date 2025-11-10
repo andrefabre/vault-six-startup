@@ -7,7 +7,7 @@
 1. Create new GitHub repository
    - Go to GitHub.com
    - Click "New repository"
-   - Name: vault-six-startup
+   - Name: vault-six-startup-demo
    - Add Description: "Digital Asset Security Application"
    - Initialize with README.md
    - Add .gitignore (Python template)
@@ -15,18 +15,17 @@
 
 2. Clone repository locally
    ```bash
-   git clone https://github.com/[your-username]/vault-six-startup.git
-   cd vault-six-startup
+   git clone https://github.com/[your-username]/vault-six-startup-demo.git
+   cd vault-six-startup-demo
    ```
 
 3. Set up Python virtual environment
    ```bash
    # Create virtual environment
    python -m venv venv
-   
    # Activate virtual environment
    # On Windows:
-   .\venv\Scripts\activate
+   .\venv\Scripts\Activate.ps1
    # On Unix/MacOS:
    source venv/bin/activate
    ```
